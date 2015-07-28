@@ -1,0 +1,111 @@
+###########################################################################################################################################################################################
+# Application	: logging.module
+# Author		: hshashid
+# Description	: the module defaults to LOG_LVL = 3 (info+debug+warn+error)
+# 		LOG LEVELs
+# 		0 - info 
+# 		1 - info + debug
+# 		2 - info + debug + warn
+# 		3 - info + debug + warn + error
+# 
+# Change list
+# Date		Person				Remarks
+# -----------	--------------		-----------------------------------------------		
+# 28-JUL-2015	hshashid			Initial version	
+###########################################################################################################################################################################################			
+### LOG levels initialization
+INFO_LVL=0
+DEBUG_LVL=1
+WARN_LVL=2
+ERROR_LVL=3
+
+#------------------------x SET log level here x---------------
+#NOTE: Alternatively this could be overriden anywhere in the app using the module
+LOG_LVL=$ERROR_LVL
+#-------------------------------------------------------------
+
+##############################################################DD
+## inputs       : 
+## outputs      : 
+## description  : method to deplay log levels
+################################################################
+log_lvl_info (){
+	echo "=== LOG LEVELs ==="
+	echo "$INFO_LVL	- info"
+	echo "$DEBUG_LVL	- info + debug"
+	echo "$WARN_LVL	- info + debug + warn"
+	echo "$ERROR_LVL	- info + debug + warn + error"
+}
+
+##############################################################DD
+## inputs       : string
+## outputs      : NA
+## description  : method to validate if the LOG_LVL is set
+##				if the log level is not set then it defaults 
+##				to info
+################################################################
+validate_log_lvl (){
+	if [[ "$LOG_LVL" == "" ]]; then
+		#if log level is not set then default to 
+		echo 0
+	else 
+		echo $LOG_LVL
+	fi
+}
+
+##############################################################DD
+## inputs       : string
+## outputs      : NA
+## description  : method for error logging
+################################################################
+info_log (){
+	local LOG_LEVEL=`validate_log_lvl`
+	if [[ $LOG_LEVEL -ge $INFO_LVL ]]; then
+		log "INFO : "$@ 
+	fi
+}
+
+##############################################################DD
+## inputs       : string
+## outputs      : NA
+## description  : method for debug logging
+################################################################
+debug_log (){
+	local LOG_LEVEL=`validate_log_lvl`
+	if [[ $LOG_LEVEL -ge $DEBUG_LVL ]]; then
+		log "DEBUG: "$@
+	fi
+}
+
+##############################################################DD
+## inputs       : string
+## outputs      : NA
+## description  : method for warn logging
+################################################################
+warn_log (){
+        local LOG_LEVEL=`validate_log_lvl`
+        if [[ $LOG_LEVEL -ge $WARN_LVL ]]; then
+                log "WARN : "$@ 
+        fi
+}
+
+##############################################################DD
+## inputs       : string
+## outputs      : NA
+## description  : method for error logging
+################################################################
+error_log (){
+	local LOG_LEVEL=`validate_log_lvl`
+	if [[ $LOG_LEVEL -ge $ERROR_LVL ]]; then
+		log "ERROR: "$@ 
+	fi
+}
+
+##############################################################DD
+## inputs       : string
+## outputs      : NA
+## description  : method for logging to stderr unix stream
+################################################################
+log (){
+	echo "LOG: "$@ 1>&2
+}
